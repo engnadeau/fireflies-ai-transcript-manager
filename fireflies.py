@@ -26,6 +26,7 @@ class FirefliesTranscriptManager:
             "Origin": "https://api.fireflies.ai",
             "Authorization": f"Bearer {self.api_token}",
         }
+        self.folder = Path("transcripts")
 
     def fetch(self):
         query = {
@@ -77,21 +78,59 @@ class FirefliesTranscriptManager:
             )
 
     def _save_transcripts(self, transcripts):
-        folder = Path("transcripts")
-        folder.mkdir(parents=True, exist_ok=True)
+        self.folder.mkdir(parents=True, exist_ok=True)
 
-        logging.info(f"Saving transcripts to {folder}...")
+        logging.info(f"Saving transcripts to {self.folder}...")
         for transcript in transcripts:
             date_str = datetime.fromtimestamp(int(transcript["date"]) / 1000).strftime(
                 "%Y-%m-%d"
             )
             title = slugify(transcript["title"])
-            filename = folder / f"{date_str}_{title}.json"
+            filename = self.folder / f"{date_str}_{title}.json"
 
             logging.info(f"Saving transcript: {filename}")
             with open(filename, "w") as file:
                 json.dump(transcript, file, indent=4)
             logging.info(f"Transcript saved: {filename}")
+
+    def delete(self):
+        if not self.folder.exists():
+            logging.error(f"No local transcripts found in {self.folder}")
+            return
+
+        transcripts = list(self.folder.glob("*.json"))
+        logging.info(f"Deleting {len(transcripts)} transcripts...")
+        for transcript_file in transcripts:
+            with open(transcript_file, "r") as file:
+                transcript = json.load(file)
+                transcript_id = transcript.get("id")
+                if transcript_id:
+                    logging.info(
+                        f"Deleting transcript {transcript_file.name} with ID {transcript_id}"
+                    )
+                    self._delete_transcript(transcript_id)
+                else:
+                    logging.error(f"Failed to delete transcript: {transcript_file}")
+
+    def _delete_transcript(self, transcript_id):
+        mutation = {
+            "query": """
+                mutation deleteTranscript($id: String!){
+                  deleteTranscript(id: $id){
+                    id
+                  }
+                }
+            """,
+            "variables": {"id": transcript_id},
+        }
+        response = requests.post(self.url, headers=self.headers, json=mutation)
+
+        if response.status_code == 200:
+            logging.info(f"Deleted transcript with ID: {transcript_id}")
+        else:
+            logging.error(
+                f"Failed to delete transcript: {transcript_id} - {response.status_code} {response.text}"
+            )
 
 
 def main():

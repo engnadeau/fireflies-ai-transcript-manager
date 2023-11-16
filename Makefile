@@ -1,8 +1,15 @@
-.DEFAULT_GOAL := fetch
+.DEFAULT_GOAL := all
+
+.PHONY: all
+all: fetch delete
 
 .PHONY: fetch
 fetch:
 	poetry run python fireflies.py fetch
+
+.PHONY: delete
+delete:
+	poetry run python fireflies.py delete
 
 .PHONY: format
 format:
