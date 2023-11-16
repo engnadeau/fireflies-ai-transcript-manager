@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fireflies-ai-transcript-manager"
+version = "0.1.0"
+description = "Automate and streamline your Fireflies.ai transcript management with fetching, saving, and space optimization."
+authors = ["Nicholas Nadeau <nicholas.nadeau@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+fire = "^0.5.0"
+python-slugify = "^8.0.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.11.0"
+isort = "^5.12.0"
+ruff = "^0.1.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
