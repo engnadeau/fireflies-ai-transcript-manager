@@ -44,15 +44,15 @@ Transcripts will be saved in the `transcripts` folder within the project directo
 
 - **Formatting**:
 
-  ```bash
+    ```bash
     make format
-  ```
+    ```
 
 - **Linting**:
 
-  ```bash
-  make lint
-  ```
+    ```bash
+    make lint
+    ```
 
 ---
 
