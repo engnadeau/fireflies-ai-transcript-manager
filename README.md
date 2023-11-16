@@ -4,14 +4,16 @@
 
 ## Description
 
-`Fireflies AI Transcript Manager` is a tool designed to automate the process of managing meeting transcripts from Fireflies.ai.
-It simplifies the workflow by providing functionalities to fetch, save, and organize transcripts efficiently, enhancing the overall experience of handling meeting documentation.
+`Fireflies AI Transcript Manager` is a versatile tool designed to automate the management of meeting transcripts from Fireflies.ai.
+It streamlines the workflow by offering functionalities to fetch, save, delete, and organize transcripts efficiently, thereby enhancing the experience of handling meeting documentation.
 
 ## Features
 
 - **Fetch Transcripts**: Automatically retrieve transcripts from your Fireflies.ai account.
-- **Save Transcripts Locally**: Transcripts are saved in a structured format within a designated folder for easy access and organization.
-- **Logging**: Detailed logging of operations, making it easier to track the process and troubleshoot any issues.
+- **Save Transcripts Locally**: Save transcripts in a structured format within a designated folder for easy access and organization.
+- **Delete Transcripts**: Efficiently delete transcripts from the cloud using local transcript data, utilizing parallel processing for faster execution.
+- **Parallel Processing**: Leverages concurrent threads for rapid deletion of multiple transcripts, enhancing performance and efficiency.
+- **Logging**: Detailed logging of all operations, providing insights into the process and aiding in troubleshooting.
 
 ## Installation
 
@@ -32,13 +34,21 @@ It simplifies the workflow by providing functionalities to fetch, save, and orga
 
 Set the `FIREFLIES_AI_API_TOKEN` environment variable with your [Fireflies.ai API token](https://app.fireflies.ai/integrations/custom/fireflies).
 
-To fetch transcripts, run:
+- **Fetching Transcripts**:
 
-```bash
-make fetch
-```
+   ```bash
+   make fetch
+   ```
 
-Transcripts will be saved in the `transcripts` folder within the project directory.
+   Transcripts will be saved in the `transcripts` folder within the project directory.
+
+- **Deleting Transcripts**:
+
+   ```bash
+   make delete
+   ```
+
+   This will delete transcripts from the cloud that are already downloaded locally.
 
 ## Development Commands
 
@@ -56,4 +66,4 @@ Transcripts will be saved in the `transcripts` folder within the project directo
 
 ---
 
-Photo by <a href="https://unsplash.com/@dtravisphd?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">David Travis</a> on <a href="https://unsplash.com/photos/brown-fountain-pen-on-notebook-5bYxXawHOQg?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+Photo by [David Travis](https://unsplash.com/@dtravisphd?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash) on [Unsplash](https://unsplash.com/photos/brown-fountain-pen-on-notebook-5bYxXawHOQg?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
