@@ -1,3 +1,4 @@
+import concurrent.futures
 import json
 import logging
 import os
@@ -100,17 +101,25 @@ class FirefliesTranscriptManager:
 
         transcripts = list(self.folder.glob("*.json"))
         logging.info(f"Deleting {len(transcripts)} transcripts...")
-        for transcript_file in transcripts:
-            with open(transcript_file, "r") as file:
-                transcript = json.load(file)
-                transcript_id = transcript.get("id")
-                if transcript_id:
-                    logging.info(
-                        f"Deleting transcript {transcript_file.name} with ID {transcript_id}"
-                    )
-                    self._delete_transcript(transcript_id)
-                else:
-                    logging.error(f"Failed to delete transcript: {transcript_file}")
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = []
+            for transcript_file in transcripts:
+                with open(transcript_file, "r") as file:
+                    transcript = json.load(file)
+                    transcript_id = transcript.get("id")
+                    if transcript_id:
+                        logging.info(
+                            f"Queueing deletion for transcript {transcript_file.name} with ID {transcript_id}"
+                        )
+                        futures.append(
+                            executor.submit(self._delete_transcript, transcript_id)
+                        )
+                    else:
+                        logging.error(f"Failed to queue deletion: {transcript_file}")
+
+            for future in concurrent.futures.as_completed(futures):
+                future.result()
 
     def _delete_transcript(self, transcript_id):
         mutation = {
@@ -123,6 +132,7 @@ class FirefliesTranscriptManager:
             """,
             "variables": {"id": transcript_id},
         }
+        logging.info(f"Deleting transcript with ID: {transcript_id}")
         response = requests.post(self.url, headers=self.headers, json=mutation)
 
         if response.status_code == 200:
