@@ -87,7 +87,9 @@ class FirefliesTranscriptManager:
                 "%Y-%m-%d"
             )
             title = slugify(transcript["title"])
-            filename = self.folder / f"{date_str}_{title}.json"
+            transcript_id = transcript["id"]
+            # include transcript_id to ensure uniqueness
+            filename = self.folder / f"{date_str}_{title}_{transcript_id}.json"
 
             logging.info(f"Saving transcript: {filename}")
             with open(filename, "w") as file:
