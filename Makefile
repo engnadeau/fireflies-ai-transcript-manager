@@ -5,11 +5,11 @@ all: fetch delete
 
 .PHONY: fetch
 fetch:
-	poetry run python fireflies.py fetch
+	poetry run python src/fireflies.py fetch
 
 .PHONY: delete
 delete:
-	poetry run python fireflies.py delete
+	poetry run python src/fireflies.py delete
 
 .PHONY: format
 format:
