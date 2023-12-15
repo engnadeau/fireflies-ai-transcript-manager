@@ -161,3 +161,6 @@ cython_debug/
 
 # ignore output
 *.json
+
+# Ignore dynaconf secret files
+.secrets.*
